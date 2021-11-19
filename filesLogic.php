@@ -1,13 +1,12 @@
 <?php
+include 'security.php';
 // connect to the database
 $conn = mysqli_connect('localhost', 'root', '', 'file-management');
-$key = 'qkwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
+
 //check files in database
 $sql = "SELECT * FROM files";
 $result = mysqli_query($conn, $sql);
 $files = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-//THE KEY FOR ENCRYPTION AND DECRYPTION
 
 
 // Uploads files
@@ -72,19 +71,4 @@ if (isset($_GET['file_id'])) {
         exit;
     }
 
-}
-
-//ENCRYPT FUNCTION
-function encryptthis($data, $key) {
-$encryption_key = base64_decode($key);
-$iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
-$encrypted = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
-return base64_encode($encrypted . '::' . $iv);
-}
-
-//DECRYPT FUNCTION
-function decryptthis($data, $key) {
-$encryption_key = base64_decode($key);
-list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2),2,null);
-return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
 }

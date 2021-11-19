@@ -22,7 +22,7 @@
   <?php foreach ($files as $file): ?>
     <tr>
       <td><?php echo $file['id']; ?></td>
-      <td><?php echo $file['name']; ?></td>
+      <td><?php echo decryptthis($file['name'],$key); ?></td>
       <td><?php echo floor($file['size'] / 1000) . ' KB'; ?></td>
       <td><?php echo $file['downloads']; ?></td>
       <td><a href="downloads.php?file_id=<?php echo $file['id'] ?>">Download</a></td>
