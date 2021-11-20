@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?<?php echo time(); ?>" type="text/css">
     <title>Files Upload and Download</title>
   </head>
   <body>
