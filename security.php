@@ -1,6 +1,6 @@
 <?php
 //key for encryption and decryption
-$key = 'qkwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
+//$key = 'qkwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
 
 //encrypt function
 function encryptthis($data, $key) {

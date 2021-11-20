@@ -3,14 +3,13 @@ require 'security.php';
 // connect to the database
 $conn = mysqli_connect('localhost', 'root', '', 'file-management');
 $conn_hash = mysqli_connect('localhost', 'root', '', 'integrity-management');
+$conn_key = mysqli_connect('localhost', 'root', '', 'key-management');
 
 //check files in database
 $sql = "SELECT * FROM files";
-
-$sql = "SELECT * FROM files";
 $result = mysqli_query($conn, $sql);
-
 $files = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
 
 // Uploads files
 if (isset($_POST['save'])) { // if save button on the form is clicked
@@ -34,6 +33,8 @@ if (isset($_POST['save'])) { // if save button on the form is clicked
         // move the uploaded (temporary) file to the specified destination
 
         if (move_uploaded_file($file, $destination)) {
+            $key = openssl_random_pseudo_bytes(24);
+            $key = bin2hex($key);
             $md5_hash_file = md5_file($destination); //md5 hash file for integrity check
             $filename = encryptthis($filename, $key); // encrpyt filename
             $newdestination = 'uploads/' . $filename;
@@ -43,8 +44,11 @@ if (isset($_POST['save'])) { // if save button on the form is clicked
             if (mysqli_query($conn, $sql)) {
                 echo "File uploaded successfully";
                 $last_id = mysqli_insert_id($conn);
-                $sql_hash = "INSERT INTO integrity_table (file_id,md5_hash) VALUES ($last_id,'$md5_hash_file')";
+                $sql_hash = "INSERT INTO integrity_table (file_id,md5_hash) VALUES ($last_id,'$md5_hash_file')"; //insert hash to database
                 $sql2 = mysqli_query($conn_hash, $sql_hash);
+                $sql_key = "INSERT INTO key_storage (file_id,key_storage) VALUES ($last_id,'$key')";
+                $sql3 = mysqli_query($conn_key, $sql_key);
+
             }
         } else {
             echo "Failed to upload file.";
@@ -55,25 +59,23 @@ if (isset($_POST['save'])) { // if save button on the form is clicked
 // Downloads files
 if (isset($_GET['file_id'])) {
     $id = $_GET['file_id'];
-    echo $id;
-    // fetch file to download from database
+    // fetch file and relevant hash and key from database
     $sql = "SELECT * FROM files WHERE id=$id";
     $sql_hash ="SELECT * FROM integrity_table WHERE file_id=$id";
+    $sql_key = "SELECT * FROM key_storage WHERE file_id=$id";
 
     $result = mysqli_query($conn, $sql);
     $result_hash = mysqli_query($conn_hash, $sql_hash);
+    $result_key = mysqli_query($conn_key, $sql_key);
 
     $file = mysqli_fetch_assoc($result);
     $file_hash =  mysqli_fetch_assoc($result_hash);//fetch hash from fileid
-    //md5('$file['name']')
-    //if ($file_hash['md5_hash'] == md5($file['name'])){
+    $key = mysqli_fetch_assoc($result_key); // fetch key for decryption
 
-
-
-        $decrptedfilename = decryptthis($file['name'], $key);
+        $decrptedfilename = decryptthis($file['name'], $key['key_storage']);
         $filepath = 'uploads/' . $file['name'];
         $decrypted_filepath = 'uploads/' . $decrptedfilename;
-        $decryptedfile = decryptFile($filepath, $key, $decrypted_filepath);
+        $decryptedfile = decryptFile($filepath, $key['key_storage'], $decrypted_filepath);
 
 
 
@@ -96,6 +98,7 @@ if (isset($_GET['file_id'])) {
                 }
            else{
              echo "The file has been tampered"; //if hash does not match
+             unlink($decrypted_filepath);
            }
 
        }
