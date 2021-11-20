@@ -1,5 +1,5 @@
 <?php
-include 'security.php';
+require 'security.php';
 // connect to the database
 $conn = mysqli_connect('localhost', 'root', '', 'file-management');
 $conn_hash = mysqli_connect('localhost', 'root', '', 'integrity-management');
@@ -28,7 +28,7 @@ if (isset($_POST['save'])) { // if save button on the form is clicked
     $size = $_FILES['myfile']['size'];
     if (!in_array($extension, ['zip', 'pdf', 'docx'])) {
         echo "You file extension must be .zip, .pdf or .docx";
-    } elseif ($_FILES['myfile']['size'] > 1000000) { // file shouldn't be larger than 1Megabyte
+    } elseif ($_FILES['myfile']['size'] > 10000000) { // file shouldn't be larger than 10Megabyte
         echo "File too large!";
     } else {
         // move the uploaded (temporary) file to the specified destination

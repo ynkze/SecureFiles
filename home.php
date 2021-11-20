@@ -8,6 +8,8 @@ if (!isset($_SESSION['loggedin'])) {
 }
 ?>
 
+<?php require 'filesLogic.php';?>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -24,10 +26,24 @@ if (!isset($_SESSION['loggedin'])) {
 				<a href="logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a>
 			</div>
 		</nav>
-        
+
 		<div class="content">
 			<h2>Home Page</h2>
 			<p>Welcome back, <?=$_SESSION['name']?>!</p>
+            <div class="container">
+                <div class="row">
+                    <form action="index.php" method="post" enctype="multipart/form-data" >
+                    <h3>Upload File</h3>
+                    <input type="file" name="myfile"> <br>
+                    <button type="submit" name="save">upload</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="container">
+                <h3>Download file</h3>
+                <button>Download</button>
+            </div>
 		</div>
 	</body>
 </html>
