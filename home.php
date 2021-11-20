@@ -32,7 +32,7 @@ if (!isset($_SESSION['loggedin'])) {
 			<p>Welcome back, <?=$_SESSION['name']?>!</p>
             <div class="container">
                 <div class="row">
-                    <form action="index.php" method="post" enctype="multipart/form-data" >
+                    <form action="home.php" method="post" enctype="multipart/form-data" >
                     <h3>Upload File</h3>
                     <input type="file" name="myfile"> <br>
                     <button type="submit" name="save">upload</button>

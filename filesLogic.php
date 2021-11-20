@@ -38,6 +38,7 @@ if (isset($_POST['save'])) { // if save button on the form is clicked
             $filename = encryptthis($filename, $key); // encrpyt filename
             $newdestination = 'uploads/' . $filename;
             $file = encryptFile($destination, $key, $newdestination); //encryptfilecontent
+            unlink($destination);
             $sql = "INSERT INTO files (name, size, downloads) VALUES ('$filename', $size, 0)";
             if (mysqli_query($conn, $sql)) {
                 echo "File uploaded successfully";
@@ -75,6 +76,7 @@ if (isset($_GET['file_id'])) {
         $decryptedfile = decryptFile($filepath, $key, $decrypted_filepath);
 
 
+
         if (file_exists($decrypted_filepath)) {
             if (md5_file($decrypted_filepath) == $file_hash['md5_hash']){  // check for intergrity
                     header('Content-Description: File Transfer');
@@ -85,6 +87,7 @@ if (isset($_GET['file_id'])) {
                     header('Pragma: public');
                     header('Content-Length: ' . filesize('uploads/' . $decrptedfilename));
                     readfile('uploads/' . $decrptedfilename);
+                    unlink($decrypted_filepath);
                     // Now update downloads count
                     $newCount = $file['downloads'] + 1;
                     $updateQuery = "UPDATE files SET downloads=$newCount WHERE id=$id";

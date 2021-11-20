@@ -54,7 +54,7 @@ function encryptFile($source, $key, $dest)
         $error = true;
     }
 
-    return $error ? false : $dest;
+    //return $error ? false : $dest;
 }
 
 /**
@@ -91,5 +91,5 @@ function decryptFile($source, $key, $dest)
         $error = true;
     }
 
-    return $error ? false : $dest;
+    //return $error ? false : $dest;
 }
