@@ -1,5 +1,7 @@
 <?php
+
 require 'security.php';
+//
 // connect to the database
 $conn = mysqli_connect('localhost', 'root', '', 'file-management');
 $conn_hash = mysqli_connect('localhost', 'root', '', 'integrity-management');
@@ -10,9 +12,14 @@ $sql = "SELECT * FROM files";
 $result = mysqli_query($conn, $sql);
 $files = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
+//check files belonging owner
+
 
 // Uploads files
 if (isset($_POST['save'])) { // if save button on the form is clicked
+    session_start();
+    $currentUser = $_SESSION['name'];
+
     // name of the uploaded file
     $filename = $_FILES['myfile']['name'];
 
@@ -40,8 +47,9 @@ if (isset($_POST['save'])) { // if save button on the form is clicked
             $newdestination = 'uploads/' . $filename;
             $file = encryptFile($destination, $key, $newdestination); //encryptfilecontent
             unlink($destination);
-            $sql = "INSERT INTO files (name, size, downloads) VALUES ('$filename', $size, 0)";
+            $sql = "INSERT INTO files (name, size, owner, downloads) VALUES ('$filename', $size, '$currentUser', 0)";
             if (mysqli_query($conn, $sql)) {
+                echo $currentUser;
                 echo "File uploaded successfully";
                 $last_id = mysqli_insert_id($conn);
                 $sql_hash = "INSERT INTO integrity_table (file_id,md5_hash) VALUES ($last_id,'$md5_hash_file')"; //insert hash to database
@@ -102,4 +110,21 @@ if (isset($_GET['file_id'])) {
            }
 
        }
+}
+
+//remove file from database
+if (isset($_GET['remove_id'])){
+  $id = $_GET['remove_id'];
+  $sql_delete_file = "DELETE FROM files WHERE id = $id";
+  $sql_delete_hash = "DELETE FROM integrity_table WHERE file_id = $id";
+  $sql_delete_key = "DELETE FROM key_storage WHERE file_id = $id";
+  if (mysqli_query($conn, $sql_delete_file) && mysqli_query($conn_hash, $sql_delete_hash) && mysqli_query($conn_key, $sql_delete_key)){
+    echo "The file has been removed from the database";
+    exit;
+  }
+  else {
+    echo "Process failed";
+  }
+
+
 }

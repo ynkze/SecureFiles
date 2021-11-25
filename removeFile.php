@@ -6,7 +6,9 @@ if (!isset($_SESSION['loggedin'])) {
 	header('Location: index.html');
 	exit;
 }
+
 $conn_key = mysqli_connect('localhost', 'root', '', 'key-management');
+
 ?>
 
 <?php require 'filesLogic.php';?>
@@ -33,6 +35,7 @@ $conn_key = mysqli_connect('localhost', 'root', '', 'key-management');
 
   <?php foreach ($files as $file): ?>
     <tr>
+			<?php if($file['owner'] == $_SESSION['name']) : ?>
       <td><?php echo $file['id']; ?></td>
 			    <?php $id = $file['id']; ?>
 					<?php $sql_key = "SELECT * FROM key_storage WHERE file_id= $id"; ?>
@@ -42,7 +45,8 @@ $conn_key = mysqli_connect('localhost', 'root', '', 'key-management');
       <td><?php echo floor($file['size'] / 1000) . ' KB'; ?></td>
 			<td><?php echo $file['owner']; ?></td>
       <td><?php echo $file['downloads']; ?></td>
-      <td><a href="downloads.php?file_id=<?php echo $file['id'] ?>">Download</a></td>
+      <td><a href="removeFile.php?remove_id=<?php echo $file['id'] ?>">Remove</a></td>
+			<?php endif; ?>
     </tr>
   <?php endforeach;?>
 
