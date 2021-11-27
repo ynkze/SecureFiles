@@ -125,6 +125,4 @@ if (isset($_GET['remove_id'])){
   else {
     echo "Process failed";
   }
-
-
 }

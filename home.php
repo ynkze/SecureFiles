@@ -6,6 +6,9 @@ if (!isset($_SESSION['loggedin'])) {
 	header('Location: index.html');
 	exit;
 }
+$conn = mysqli_connect('localhost', 'root', '', 'phplogin');
+$sql = "SELECT * FROM accounts";
+$accounts = mysqli_query($conn, $sql);
 ?>
 
 <?php require 'filesLogic.php';?>
@@ -21,7 +24,8 @@ if (!isset($_SESSION['loggedin'])) {
 	<body class="loggedin">
 		<nav class="navtop">
 			<div>
-				<h1>Website Title</h1>
+				<h1>SecureFiles</h1>
+				<a href="home.php"><i class="fas fa-home"></i>Home</a>
 				<a href="profile.php"><i class="fas fa-user-circle"></i>Profile</a>
 				<a href="logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a>
 			</div>
@@ -32,8 +36,23 @@ if (!isset($_SESSION['loggedin'])) {
 			<p>Welcome back, <?=$_SESSION['name']?>!</p>
             <div class="container">
                 <div class="row">
+					<h3>Upload File</h3>
+					<h4>Select user</h4>
+					<div class="dropdown">
+						<button onclick="show()" class="dropbtn">Find user</button>
+						<div id="myDropdown" class="dropdown-content">
+							<?php foreach ($accounts as $user): ?>
+								<form method="post" action="home.php">
+								<input type="submit" value="<?php echo $user['username']; ?>">
+								</form>
+								<?php if (isset($_POST[$user['username']])) {
+									$username=$user['username'];
+								}?>
+							<?php endforeach;?>
+						</div>
+					</div><br>
                     <form action="home.php" method="post" enctype="multipart/form-data" >
-						<h3>Upload File</h3>
+						<h4>Choose file</h4>
 						<input type="file" name="myfile"> <br>
 						<button type="submit" name="save">Upload</button>
                     </form>
@@ -58,5 +77,13 @@ if (!isset($_SESSION['loggedin'])) {
 				</div>
             </div>
 		</div>
+		<script>
+		/* When the user clicks on the button,
+		toggle between hiding and showing the dropdown content */
+		function show() {
+		document.getElementById("myDropdown").classList.toggle("show");
+		}
+		</script>
+
 	</body>
 </html>
