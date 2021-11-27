@@ -65,4 +65,14 @@ $user1 = 'test';
 $password1 = password_hash("test", PASSWORD_DEFAULT);
 $sql_account1 = "INSERT INTO `accounts` (`id`, `username`, `password`, `email`) VALUES (1, '$user1', '$password1', 'test@test.com')";
 mysqli_query($conn_phplogin, $sql_account1);
+
+$user2 = 'alice';
+$password2 = password_hash("alice", PASSWORD_DEFAULT);
+$sql_account2 = "INSERT INTO `accounts` (`id`, `username`, `password`, `email`) VALUES (2, '$user2', '$password2', 'alice@test.com')";
+mysqli_query($conn_phplogin, $sql_account2);
+
+$user3 = 'bob';
+$password3 = password_hash("bob", PASSWORD_DEFAULT);
+$sql_account3 = "INSERT INTO `accounts` (`id`, `username`, `password`, `email`) VALUES (3, '$user3', '$password3', 'bob@test.com')";
+mysqli_query($conn_phplogin, $sql_account3);
 ?>

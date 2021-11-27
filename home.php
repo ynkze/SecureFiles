@@ -33,16 +33,29 @@ if (!isset($_SESSION['loggedin'])) {
             <div class="container">
                 <div class="row">
                     <form action="home.php" method="post" enctype="multipart/form-data" >
-                    <h3>Upload File</h3>
-                    <input type="file" name="myfile"> <br>
-                    <button type="submit" name="save">upload</button>
+						<h3>Upload File</h3>
+						<input type="file" name="myfile"> <br>
+						<button type="submit" name="save">Upload</button>
                     </form>
                 </div>
             </div>
 
             <div class="container">
-                <h3>Download file</h3>
-                <button>Download</button>
+				<div class="row">
+					<form action="downloads.php" >
+						<h3>Download file</h3>
+						<button>See downloadable files</button>
+					</form>
+				</div>
+            </div>
+
+			<div class="container">
+				<div class="row">
+					<form action="removeFile.php" >
+						<h3>Remove owned file</h3>
+						<button>See removable file</button>
+					</form>
+				</div>
             </div>
 		</div>
 	</body>

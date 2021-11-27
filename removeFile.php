@@ -17,7 +17,8 @@ $conn_key = mysqli_connect('localhost', 'root', '', 'key-management');
 <html>
 <head>
   <meta charset="utf-8" />
-  <link rel="stylesheet" href="style.css">
+  <link href="style.css?<?php echo time(); ?>" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
   <title>Download files</title>
 </head>
 <body>
