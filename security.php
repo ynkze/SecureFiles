@@ -1,7 +1,20 @@
 <?php
-//key for encryption and decryption
-//$key = 'qkwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
 
+//generate dh key using alice private key
+function generateDHKey_alice($remote_public_key){
+  $keyfile="file://".__DIR__.DIRECTORY_SEPARATOR."alice_privatekey.pem"; //absolute path
+  $local_priv_key = openssl_pkey_get_private($keyfile); //get server private key
+  $shared_secret = openssl_dh_compute_key(hex2bin($remote_public_key), $local_priv_key); // get dh key
+  return $shared_secret;
+}
+
+//generate dh key using bob private key
+function generateDHKey_bob($remote_public_key){
+  $keyfile="file://".__DIR__.DIRECTORY_SEPARATOR."bob_privatekey.pem"; //absolute path
+  $local_priv_key = openssl_pkey_get_private($keyfile); //get server private key
+  $shared_secret = openssl_dh_compute_key(hex2bin($remote_public_key), $local_priv_key); // get dh key
+  return $shared_secret;
+}
 //encrypt function
 function encryptthis($data, $key) {
 $encryption_key = base64_decode($key);
