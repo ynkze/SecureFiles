@@ -1,6 +1,7 @@
 <?php
 
 require 'security.php';
+
 //
 // connect to the database
 $conn = mysqli_connect('localhost', 'root', '', 'file-management');
@@ -12,7 +13,19 @@ $sql = "SELECT * FROM files";
 $result = mysqli_query($conn, $sql);
 $files = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-//check files belonging owner
+//find selected user to share with
+
+
+if (isset($_POST['username'])) {
+  $name = $_POST['username'];
+  if ($name == "alice"){
+    $username = 'bob';
+  }
+  else{
+    $username = 'alice';
+  }
+}
+
 
 
 // Uploads files
@@ -21,6 +34,7 @@ if (isset($_POST['save'])) { // if save button on the form is clicked
     //get user information
     $currentUser = $_SESSION['name'];
     //fetch user public key
+
     if ($currentUser == 'alice'){
         $sql_publickey="SELECT * FROM key_management WHERE username= 'bob'";
         $result_key = mysqli_query($conn_key, $sql_publickey);
@@ -152,10 +166,19 @@ if (isset($_GET['file_id'])) {
 //remove file from database
 if (isset($_GET['remove_id'])){
   $id = $_GET['remove_id'];
+
+  //get filename and path
+  $sql = "SELECT * FROM files WHERE id=$id";
+  $result = mysqli_query($conn, $sql);
+  $file = mysqli_fetch_assoc($result);
+  $filename = $file['name'];
+  $filepath = 'uploads/' . $filename;
+
   $sql_delete_file = "DELETE FROM files WHERE id = $id";
   $sql_delete_hash = "DELETE FROM integrity_table WHERE file_id = $id";
   if (mysqli_query($conn, $sql_delete_file) && mysqli_query($conn_hash, $sql_delete_hash)){
     echo "The file has been removed from the database";
+    unlink($filepath);
     exit;
   }
   else {

@@ -41,14 +41,15 @@ $accounts = mysqli_query($conn, $sql);
 					<div class="dropdown">
 						<button onclick="show()" class="dropbtn">Find user</button>
 						<div id="myDropdown" class="dropdown-content">
-							<?php foreach ($accounts as $user): ?>
-								<form method="post" action="home.php">
-								<input type="submit" value="<?php echo $user['username']; ?>">
-								</form>
-								<?php if (isset($_POST[$user['username']])) {
-									$username=$user['username'];
-								}?>
-							<?php endforeach;?>
+							<form action="home.php" method="post" enctype="multipart/form-data">
+							  <label for="cars">Select user:</label>
+							  <select name="username" id="name">
+							    <option value="alice">alice</option>
+							    <option value="bob">bob</option>
+							  </select>
+							  <br><br>
+							  <input type="submit" value="Submit">
+							</form>
 						</div>
 					</div><br>
                     <form action="home.php" method="post" enctype="multipart/form-data" >
