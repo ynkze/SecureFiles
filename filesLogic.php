@@ -132,37 +132,34 @@ if (isset($_GET['file_id'])) {
         $key = generateDHKey_bob($user_publickey); //generate dhkey for encryption
       }
 
+    $decrptedfilename = decryptthis($file['name'], $key);
+    $filepath = 'uploads/' . $file['name'];
+    $decrypted_filepath = 'uploads/' . $decrptedfilename;
+    $decryptedfile = decryptFile($filepath, $key, $decrypted_filepath);
 
-        $decrptedfilename = decryptthis($file['name'], $key);
-        $filepath = 'uploads/' . $file['name'];
-        $decrypted_filepath = 'uploads/' . $decrptedfilename;
-        $decryptedfile = decryptFile($filepath, $key, $decrypted_filepath);
+    if (file_exists($decrypted_filepath)) {
+        if (md5_file($decrypted_filepath) == $file_hash['md5_hash']){  // check for intergrity
+                header('Content-Description: File Transfer');
+                header('Content-Type: application/octet-stream');
+                header('Content-Disposition: attachment; filename=' . basename($decrypted_filepath));
+                header('Expires: 0');
+                header('Cache-Control: must-revalidate');
+                header('Pragma: public');
+                header('Content-Length: ' . filesize('uploads/' . $decrptedfilename));
+                readfile('uploads/' . $decrptedfilename);
+                unlink($decrypted_filepath);
+                // Now update downloads count
+                $newCount = $file['downloads'] + 1;
+                $updateQuery = "UPDATE files SET downloads=$newCount WHERE id=$id";
+                mysqli_query($conn, $updateQuery);
+                exit;
+            }
+        else{
+            echo "The file has been tampered"; //if hash does not match
+            unlink($decrypted_filepath);
+        }
 
-
-
-        if (file_exists($decrypted_filepath)) {
-            if (md5_file($decrypted_filepath) == $file_hash['md5_hash']){  // check for intergrity
-                    header('Content-Description: File Transfer');
-                    header('Content-Type: application/octet-stream');
-                    header('Content-Disposition: attachment; filename=' . basename($decrypted_filepath));
-                    header('Expires: 0');
-                    header('Cache-Control: must-revalidate');
-                    header('Pragma: public');
-                    header('Content-Length: ' . filesize('uploads/' . $decrptedfilename));
-                    readfile('uploads/' . $decrptedfilename);
-                    unlink($decrypted_filepath);
-                    // Now update downloads count
-                    $newCount = $file['downloads'] + 1;
-                    $updateQuery = "UPDATE files SET downloads=$newCount WHERE id=$id";
-                    mysqli_query($conn, $updateQuery);
-                    exit;
-                }
-           else{
-             echo "The file has been tampered"; //if hash does not match
-             unlink($decrypted_filepath);
-           }
-
-       }
+    }
 }
 
 //remove file from database
