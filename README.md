@@ -18,15 +18,20 @@ Many online file hosting service, such as Dropbox, do not provide end-to-end enc
 From our research, we found that most file hosting services use AES-256 to encrypt files at rest. End-to-end encryption is usually only used for messaging platform such as Whatsapp. This is because files are long-lived and rather large, making them difficult to protect, compared to messages. We looked into how we can implement end-to-end encryption for file sharing, and we came up with the following: 
 
 1. Alice upload a file and select the user they want to share to, in this case Bob.
-2. The file will be encrypted on Alice's end using Alice's public key and Bob's private key.
-3. The file stored in the database can only be decrypted with Alice and Bob's private key, which only Alice and Bob has access to. The intermediary or other 3rd parties will not be able to decrypt the content of the file.
-4. When Bob wants to download the file, the file will be decrypted with his private key and he will be able to see the content of the file.
+2. The file will be encrypted on Alice's end using the shared Diffie-Hellman key, generated from Alice's private key and Bob's public key.
+3. The file stored in the database can only be decrypted when either Alice and Bob's private key is known, which only Alice and Bob has access to. The intermediary or other 3rd parties will not be able to decrypt the content of the file.
+4. When Bob wants to download the file, the file will be decrypted with the same shared Diffie-Hellman key, but generated from his private key and Alice's public key, and he will be able to see the content of the file.
 
 We opt to keep the size of file to a maximum of 10MB to ensure we are able to protect it well and make sure encryption is fast enough. 
 
  ### Development
 
-To achieve the design we wanted, 
+To achieve the design we wanted, we uses mainly the OpenSSL library for the implmentation of the security.
+1. OpenSSL is used to generate a 512-bit private and public key for both Alice and Bob, using the same dh parameters p and g. The openssl_dh_compute_key() function will be used to compute the dh key for encryption/decryption, using a local private key and remote public key.
+2. The openssl_encrypt() and openssl_decrypt function is use for AES-256 encryption/decryption of the file contents.
+
+For the implementation of integrity of the shared files:
+1. md5_file() hashing is used to hash the file content before encryption. The result will be used to compare after decryption for verification. This can be used to check if a file has been tampered by an intermediary.
 
  ### Pre-requistes
 
