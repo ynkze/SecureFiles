@@ -16,15 +16,14 @@ $files = mysqli_fetch_all($result, MYSQLI_ASSOC);
 //find selected user to share with
 
 
-if (isset($_POST['username'])) {
-  $name = $_POST['username'];
-  if ($name == "alice"){
-    $username = 'bob';
-  }
-  else{
-    $username = 'alice';
-  }
+
+if (isset($_POST['selectname'])){
+  session_start();
+  echo $_POST['selectname'];
+  $_SESSION['selectname'] = $_POST['selectname'];
 }
+
+
 
 
 
@@ -33,10 +32,11 @@ if (isset($_POST['save'])) { // if save button on the form is clicked
     session_start();
     //get user information
     $currentUser = $_SESSION['name'];
+    $selectname = $_SESSION['selectname'];
     //fetch user public key
 
     if ($currentUser == 'alice'){
-        $sql_publickey="SELECT * FROM key_management WHERE username= 'bob'";
+        $sql_publickey="SELECT * FROM key_management WHERE username= '$selectname'";
         $result_key = mysqli_query($conn_key, $sql_publickey);
         $result_key = mysqli_fetch_assoc($result_key);
         $user_publickey = $result_key['publickey'];
@@ -44,7 +44,7 @@ if (isset($_POST['save'])) { // if save button on the form is clicked
       }
 
     else{
-        $sql_publickey="SELECT * FROM key_management WHERE username= 'alice'";
+        $sql_publickey="SELECT * FROM key_management WHERE username= '$selectname'";
         $result_key = mysqli_query($conn_key, $sql_publickey);
         $result_key = mysqli_fetch_assoc($result_key);
         $user_publickey = $result_key['publickey'];
@@ -78,7 +78,7 @@ if (isset($_POST['save'])) { // if save button on the form is clicked
             $newdestination = 'uploads/' . $filename;
             $file = encryptFile($destination, $key, $newdestination); //encryptfilecontent using AES-256
             unlink($destination);
-            $sql = "INSERT INTO files (name, size, owner, downloads) VALUES ('$filename', $size, '$currentUser', 0)";
+            $sql = "INSERT INTO files (name, size, owner, downloads, sharewith) VALUES ('$filename', $size, '$currentUser', 0, '$selectname')";
             if (mysqli_query($conn, $sql)) {
                 echo $currentUser;
                 echo "File uploaded successfully";
@@ -113,17 +113,19 @@ if (isset($_GET['file_id'])) {
     $file = mysqli_fetch_assoc($result);
     $file_hash =  mysqli_fetch_assoc($result_hash);//fetch hash from fileid
 
+    $selectuser = $file['sharewith'];
+    $owner = $file['owner'];
     //fetch relevant public keys
-    if ($currentUser == 'alice'){
-        $sql_publickey="SELECT * FROM key_management WHERE username= 'bob'";
+    if ($currentUser == $owner){
+        $sql_publickey="SELECT * FROM key_management WHERE username= '$selectuser'";
         $result_key = mysqli_query($conn_key, $sql_publickey);
         $result_key = mysqli_fetch_assoc($result_key);
         $user_publickey = $result_key['publickey'];
         $key = generateDHKey_alice($user_publickey); //generate dhkey for encryption
       }
 
-    elseif ($currentUser == 'bob'){
-        $sql_publickey="SELECT * FROM key_management WHERE username= 'alice'";
+    elseif ($currentUser == $selectuser){
+        $sql_publickey="SELECT * FROM key_management WHERE username= '$owner'";
         $result_key = mysqli_query($conn_key, $sql_publickey);
         $result_key = mysqli_fetch_assoc($result_key);
         $user_publickey = $result_key['publickey'];

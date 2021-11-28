@@ -21,6 +21,7 @@ $sql_files = "CREATE TABLE IF NOT EXISTS `files` (
   	`size` varchar(11) NOT NULL,
 		`owner`varchar(255) NOT NULL,
   	`downloads` int(11) NOT NULL,
+		`sharewith`varchar(255) NOT NULL,
     PRIMARY KEY (`id`) )";
 
 //create integrity_table table

@@ -43,7 +43,7 @@ $accounts = mysqli_query($conn, $sql);
 						<div id="myDropdown" class="dropdown-content">
 							<form action="home.php" method="post" enctype="multipart/form-data">
 							  <label for="cars">Select user:</label>
-							  <select name="username" id="name">
+							  <select name="selectname" id="name">
 							    <option value="alice">alice</option>
 							    <option value="bob">bob</option>
 							  </select>
