@@ -40,10 +40,15 @@ To achieve our project goals, we did the following:
 3. For the implementation of integrity of the shared files:
     * md5_file() hashing is used to hash the file content before encryption. The result will be used to compare after decryption for verification. This can be used to check if a file has been tampered by an intermediary.
 
-Some considerations while developing the applications are:
-    * 
-    * 
-
+ ### Code usage
+ 
+ 1. .pem files: use to store the generated private and public keys
+ 2. createTable.php: use to create table into database
+ 3. filesLogic.php: algorithm for upload, download and remove of files 
+ 4. security.php: functions for generating dh key and for AES-256 encryption/decryption
+ 5. authenticate.php: check whether the login credentials are correct
+ 6. Rest of files: software and UI design of website
+ 
  ### Pre-requistes
 
 To test this project, the following necessary:
@@ -61,11 +66,3 @@ To test this project, the following necessary:
 
 5. Upload files of type .zip, .pdf, .docx under 10MB to verify it is working for different users.
 
- ### Code usage
- 
- 1. .pem files: use to store the generated private and public keys
- 2. createTable.php: use to create table into database
- 3. filesLogic.php: algorithm for upload, download and remove of files 
- 4. security.php: functions for generating dh key and for AES-256 encryption/decryption
- 5. authenticate.php: check whether the login credentials are correct
- 6. Rest of files: software and UI design of website
