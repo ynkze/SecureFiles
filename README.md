@@ -26,12 +26,23 @@ We opt to keep the size of file to a maximum of 10MB to ensure we are able to pr
 
  ### Development
 
-To achieve the design we wanted, we uses mainly the OpenSSL library for the implmentation of the security.
-1. OpenSSL is used to generate a 512-bit private and public key for both Alice and Bob, using the same dh parameters p and g. The openssl_dh_compute_key() function will be used to compute the dh key for encryption/decryption, using a local private key and remote public key.
-2. The openssl_encrypt() and openssl_decrypt function is use for AES-256 encryption/decryption of the file contents.
+To achieve our project goals, we did the following:
 
-For the implementation of integrity of the shared files:
-1. md5_file() hashing is used to hash the file content before encryption. The result will be used to compare after decryption for verification. This can be used to check if a file has been tampered by an intermediary.
+1. User management module: We use PHP and MYSQL database to store login information of users.
+    * When user login, authenticate.php will verify if the user login information matches the database. If it matches, a session is created that will be destroyed on logging out. Any unregistered user or wrong password will be denied access to the website.
+    * Every page of the websites can only be accessed when the user is login. Trying to manually enter the site without credentials will be redirected back to the login page.
+
+2. End-to-end encryption: We uses mainly the OpenSSL library for the implmentation of the security.
+    * OpenSSL is used to generate a 512-bit private and public key for both Alice and Bob, using the same dh parameters p and g. The openssl_dh_compute_key() function will be used to compute the dh key for encryption/decryption, using a local private key and remote public key.
+
+    * The openssl_encrypt() and openssl_decrypt function is use for AES-256 encryption/decryption of the file contents.
+
+3. For the implementation of integrity of the shared files:
+    * md5_file() hashing is used to hash the file content before encryption. The result will be used to compare after decryption for verification. This can be used to check if a file has been tampered by an intermediary.
+
+Some considerations while developing the applications are:
+    * 
+    * 
 
  ### Pre-requistes
 
@@ -56,4 +67,5 @@ To test this project, the following necessary:
  2. createTable.php: use to create table into database
  3. filesLogic.php: algorithm for upload, download and remove of files 
  4. security.php: functions for generating dh key and for AES-256 encryption/decryption
- 5. Rest of files: software and UI design of website
+ 5. authenticate.php: check whether the login credentials are correct
+ 6. Rest of files: software and UI design of website
