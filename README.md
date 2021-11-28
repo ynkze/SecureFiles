@@ -37,10 +37,10 @@ To test this project, the following necessary:
 3. Open web browser and type localhost/4010project/createTable.php to create database tables.
 4. Go to localhost/4010project and you should see a login page. We have 2 accounts for testing:
 
-Username: alice
-Password alice
+    * Username: alice
+    * Password alice
 
-Username: bob
-Password bob
+    * Username: bob
+    * Password bob
 
 5. Upload files of type .zip, .pdf, .docx under 10MB to verify it is working for different users.
