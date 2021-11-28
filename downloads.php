@@ -33,7 +33,6 @@ $conn_key = mysqli_connect('localhost', 'root', '', 'key-management');
       <table>
       <thead>
           <th>ID</th>
-          <th>Filename</th>
           <th>Size (in MB)</th>
           <th>Owner</th>
           <th>Downloads</th>
@@ -44,11 +43,6 @@ $conn_key = mysqli_connect('localhost', 'root', '', 'key-management');
       <?php foreach ($files as $file): ?>
         <tr>
           <td><?php echo $file['id']; ?></td>
-          <?php $id = $file['id']; ?>
-          <?php $sql_key = "SELECT * FROM key_storage WHERE file_id= $id"; ?>
-          <?php $result_key = mysqli_query($conn_key, $sql_key); ?>
-          <?php $key = mysqli_fetch_assoc($result_key); ?>
-          <td><?php echo decryptthis($file['name'],$key['key_storage']); ?></td>
           <td><?php echo floor($file['size'] / 1000) . ' KB'; ?></td>
           <td><?php echo $file['owner']; ?></td>
           <td><?php echo $file['downloads']; ?></td>
