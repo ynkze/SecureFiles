@@ -39,7 +39,7 @@ To test this project, the following necessary:
 
 1. Download XAMPP control panel and launch Apache and MYSQL module.
 2. Place this folder named 4010project in drive location C:\xampp\htdocs
-3. Open web browser and type localhost/4010project/createTable.php to create database tables.
+3. Open web browser and type localhost/4010project/createTable.php to create database tables. Ensure to create 4 sql databases named 'phplogin', 'file-management', 'integrity-management' and 'key-management'  beforehand.
 4. Go to localhost/4010project and you should see a login page. We have 2 accounts for testing:
 
     * Username: alice
@@ -49,3 +49,11 @@ To test this project, the following necessary:
     * Password bob
 
 5. Upload files of type .zip, .pdf, .docx under 10MB to verify it is working for different users.
+
+ ### Code usage
+ 
+ 1. .pem files: use to store the generated private and public keys
+ 2. createTable.php: use to create table into database
+ 3. filesLogic.php: algorithm for upload, download and remove of files 
+ 4. security.php: functions for generating dh key and for AES-256 encryption/decryption
+ 5. Rest of files: software and UI design of website
